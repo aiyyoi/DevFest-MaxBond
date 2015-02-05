@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.link {
+  stroke: #ccc;
+}
+
+.node text {
+  pointer-events: none;
+  font: 10px sans-serif;
+}
+
+.tag{
+  fill: #ccff00;
+  stroke: white;
+  stroke-width: 3;
+}
+
+.tag text{
+  stroke: black;
+}
+
+</style>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+var width = 960,
+    height = 530
+
+var svg = d3.select("body").append("svg")
+    .style({"background-color":"#FFD700"})
+    .attr("viewBox", "0 0 " + width + " " + height );
+    //.attr("width", width)
+    //.attr("height", height);
+
+var force = d3.layout.force()
+    .gravity(.09)
+    .distance(60)
+    .charge(-700)
+    .size([width, height]);
+
+d3.json("data.json", function(error, json) {
+  force
+      .nodes(json.nodes)
+      .links(json.links)
+      .start();
+
+  var link = svg.selectAll(".link")
+      .data(json.links)
+      .enter()
+      .append("line")
+      .attr("class", "link")
+      .style("stroke-width", function() { return Math.sqrt(Math.random()*10); });
+
+// node bahaviors
+  var node = svg.selectAll(".node")
+      .data(json.nodes)
+      .enter().append("g")
+      .attr("class", "node")
+      .call(force.drag);
+
+  node.append("image")
+      .attr("xlink:href", function(d){var id = d.group%5;
+        switch(id){
+          case 0:
+            return "https://github.com/favicon.ico";
+            break;
+          case 1:
+            return "https://www.nyceda.org/wp-content/uploads/2012/02/User-yellow-icon.png";
+            break;
+          case 2:
+            return "http://th07.deviantart.net/fs71/150/f/2010/330/9/e/profile_icon_by_art311-d33mwsf.png";
+            break;
+          case 3:
+            return "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcT8hV39wIi6CS76uSg6ukZkFdTLvLAKKHy2QthLwRKQAiz_nMtDYdHFag";
+            break;
+          case 4:
+            return "http://www.iyifikirlabs.com/assets/img/profile.png";
+            break;
+        }
+      })
+      .attr("x", -8)
+      .attr("y", -8)
+      .attr("width", 16)
+      .attr("height", 16)
+      .on("mouseover", function(){
+            var cur = d3.select(this);
+            cur.attr("width", 24);
+            cur.attr("height", 24);
+      })
+      .on("mouseout", function(){
+            var cur = d3.select(this);
+            cur.attr("width", 16);
+            cur.attr("height", 16);
+      });
+
+  node.append("text")
+      .attr("dx", 12)
+      .attr("dy", ".35em")
+      .text(function(d) { return d.name; });
+
+
+// bahaviors of tags
+  var tag = svg.selectAll(".tag")
+      .data(json.tags)
+      .enter().append("rect")
+      .attr("class","tag")
+      .attr("x", function(){ return (Math.random()*(width-25)+25); })
+      .attr("y", function(){ return (Math.random()*(height-15)+15); })
+      .attr("width",50)
+      .attr("height",30)
+      .attr("rx", 15)
+      .attr("ry",15)
+      .call(force.drag);
+
+  tag.on("mouseover", function(){ d3.select(this).style("stroke", "gray"); })
+      .on("mouseout", function(){ d3.select(this).style("stroke", "white"); });
+
+  tag.append("text")
+      .attr("dx", 12)
+      .attr("dy", ".5em")
+      .attr("font-size","12px")
+      .text(function(d){ return d.name; });
+      
+
+// tick
+  force.on("tick", function() {
+    link.attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+
+    node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+  });
+
+});
+
+
+
+</script>

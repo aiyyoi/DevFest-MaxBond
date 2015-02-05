@@ -1,0 +1,8 @@
+Useful examples for next steps:
+http://bl.ocks.org/mbostock/6123708
+
+http://stackoverflow.com/questions/20644415/d3-appending-text-to-a-svg-rectangle
+
+http://bl.ocks.org/mbostock/3750558
+
+

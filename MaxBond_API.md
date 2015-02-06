@@ -7,7 +7,7 @@ Display all the data for graph
 ```json
 {
   "nodes":[
-    {"uid":0,"name":"Amy","photo":"/resources/photo0.png",""tags":[1,3],"link":"http://localhost:8000/users/0"},
+    {"uid":0,"name":"Amy","photo":"/resources/photo0.png","tags":[1,3],"link":"http://localhost:8000/users/0"},
     {"uid":1,"name":"Myriel","photo":"/resources/photo1.png","tags":[2,3],"link":"http://localhost:8000/users/1"},
     {"uid":2,"name":"Napoleon","photo":"/resources/photo2.png","tags":[4],"link":"http://localhost:8000/users/2"},
     {"uid":3,"name":"Mme.Hucheloup","photo":"/resources/photo3.png","tags":[0,4],"link":"http://localhost:8000/users/3"}

@@ -1,0 +1,20 @@
+{
+  "gender": 2, 
+  "name": "Lucy", 
+  "photo": "http://cdn.theatlantic.com/static/mt/assets/what-were-reading/Avatar.jpg", 
+  "tags": [
+    {
+      "category": 1, 
+      "link": "localhost:5000/tags/5", 
+      "name": "columbia", 
+      "tid": 5
+    }, 
+    {
+      "category": 2, 
+      "link": "localhost:5000/tags/6", 
+      "name": "startup", 
+      "tid": 6
+    }
+  ], 
+  "uid": 2
+}

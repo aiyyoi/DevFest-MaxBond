@@ -28,8 +28,9 @@ class has_tag(db.Model):
 
 
 @app.route('/graph_data/', methods=['GET'])
-def graph_data():
+def get_graph_data():
   if request.method == 'GET':
+    # search_tags = request.values.getlist('tag')
     nodes = []
     nodes_results = User.query.all()
     user_ids = [result.uid for result in nodes_results]
@@ -74,26 +75,57 @@ def graph_data():
       }
       links.append(d)
 
-
     return jsonify(nodes=nodes, links=links)
 
-# @app.route('/sightings/<int:sighting_id>', methods=['GET'])
-# def sighting(sighting_id):
+
+@app.route('/users/<int:uid>', methods=['GET'])
+def get_one_user(uid):
+  if request.method == 'GET':
+    result = User.query.filter_by(uid=uid).first()
+    tag_info = []
+    for tag in has_tag.query.filter_by(User_uid=result.uid).all():
+      tmp = Tag.query.filter_by(tid=tag.Tag_tid).first()
+      tag_info.append({'tid':tmp.tid,'name': tmp.name,'category': tmp.category,'link':root_path+"/tags/"+str(tmp.tid)})
+    json_results = {
+      'uid': result.uid,
+      'name': result.name,
+      'gender': result.gender,
+      'photo': result.image,
+      'tags':tag_info
+    }
+    return jsonify(json_results)
+
+
+@app.route('/tags/<int:tid>', methods=['GET'])
+def get_one_tag(tid):
+  if request.method == 'GET':
+    result = Tag.query.filter_by(tid=tid).first()
+    users = [user.User_uid for user in has_tag.query.filter_by(Tag_tid=result.tid).all()]
+    user_info = []
+    for user in has_tag.query.filter_by(Tag_tid=result.tid).all():
+      tmp = User.query.filter_by(uid=user.User_uid).first()
+      user_info.append({'uid':tmp.uid,'name': tmp.name,'gender': tmp.gender,'photo':tmp.image,'link':root_path+"/users/"+str(tmp.uid)})
+    json_results = {
+      'tid': result.tid,
+      'name': result.name,
+      'category': result.category,
+      'users': user_info
+    }
+    return jsonify(json_results)
+
+
+# @app.route('/graph_data?tag=', methods=['GET'])
+# def get_one_tag(tid):
 #   if request.method == 'GET':
-#     result = Sighting.query.filter_by(id=sighting_id).first()
-
-#     json_results = {'sighted_at': result.sighted_at,
-#                    'reported_at': result.reported_at,
-#                    'location': result.location,
-#                    'shape': result.shape,
-#                    'duration': result.duration,
-#                    'description': result.description,
-#                    'lat': result.lat,
-#                    'lng': result.lng}
-
-#     res = jsonify(items=json_results)
-#     res.headers['Access-Control-Allow-Origin'] = '*'
-#     return res
+#     result = Tag.query.filter_by(tid=tid).first()
+#     users = [user.User_uid for user in has_tag.query.filter_by(Tag_tid=result.tid).all()]
+#     json_results = {
+#       'tid': result.tid,
+#       'name': result.name,
+#       'category': result.category,
+#       'users': users
+#     }
+#     return jsonify(json_results)
 
 if __name__ == '__main__':
   app.run(debug=True)

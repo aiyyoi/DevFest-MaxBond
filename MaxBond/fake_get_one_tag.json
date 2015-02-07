@@ -1,0 +1,35 @@
+{
+  "category": 1, 
+  "name": "columbia", 
+  "tid": 5, 
+  "users": [
+    {
+      "gender": 1, 
+      "link": "localhost:5000/users/11", 
+      "name": "Krist", 
+      "photo": "http://dev.mysql.com/common/logos/logo-mysql-110x57.png", 
+      "uid": 11
+    }, 
+    {
+      "gender": 2, 
+      "link": "localhost:5000/users/1", 
+      "name": "Bob", 
+      "photo": "http://cdn.theatlantic.com/static/mt/assets/what-were-reading/Avatar.jpg", 
+      "uid": 1
+    }, 
+    {
+      "gender": 2, 
+      "link": "localhost:5000/users/2", 
+      "name": "Lucy", 
+      "photo": "http://cdn.theatlantic.com/static/mt/assets/what-were-reading/Avatar.jpg", 
+      "uid": 2
+    }, 
+    {
+      "gender": 1, 
+      "link": "localhost:5000/users/3", 
+      "name": "James", 
+      "photo": "http://cdn.theatlantic.com/static/mt/assets/what-were-reading/Avatar.jpg", 
+      "uid": 3
+    }
+  ]
+}

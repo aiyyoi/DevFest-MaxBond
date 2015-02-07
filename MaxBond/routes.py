@@ -32,23 +32,50 @@ def graph_data():
   if request.method == 'GET':
     nodes = []
     nodes_results = User.query.all()
+    user_ids = [result.uid for result in nodes_results]
     for result in nodes_results:
+      tags = [tag.Tag_tid for tag in has_tag.query.filter_by(User_uid=result.uid).all()]
       d = {
-        'uid':result.uid,
+        'id':result.uid,
         'name':result.name,
         'photo':result.image,
-        'tags':[1,2,3],  # chage here!
-        'link':root_path+"/users/"+str(result.uid)
+        'tags':tags,
+        'link':root_path+"/users/"+str(result.uid),
+        'isUser':True 
       }
       nodes.append(d)
 
-    pplinks = []
-    for i in xrange(1, len(nodes_results)):
-      d = {"source":0, "target": nodes_results[i].uid}
-      pplinks.append(d)
+    tags_results = Tag.query.all()
+    for result in tags_results:
+      users = [user.User_uid for user in has_tag.query.filter_by(Tag_tid=result.tid).all()]
+      d = {
+        'id':result.tid,
+        'name':result.name,
+        'category':result.category,
+        'users':users,
+        'link':root_path+'/tags/'+str(result.tid),
+        'isUser':False 
+      }
+      nodes.append(d)
+
+    links = []
+    origin_user = user_ids[0]
+    for uid in user_ids:
+      d = {
+        'source':origin_user,
+        'target':uid
+      }
+    links.append(d)
+    pt_results = has_tag.query.all()
+    for result in pt_results:
+      d = {
+        'source':result.User_uid,
+        'target':result.Tag_tid
+      }
+      links.append(d)
 
 
-    return jsonify(nodes=nodes, pplinks=pplinks)
+    return jsonify(nodes=nodes, links=links)
 
 # @app.route('/sightings/<int:sighting_id>', methods=['GET'])
 # def sighting(sighting_id):
